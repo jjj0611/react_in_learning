@@ -86,3 +86,33 @@ render() {
 }
 ```
 
+
+const와 let
+
+- ES6 이전 변수 선언시 var 키워드를 사용했는데 var 키워드는 scope가 함수 단위이다.
+```
+function myFunction() {
+	var a = "hello";
+	if (true) {
+		var a = "bye";
+		console.log(a);
+	}
+	console.log(a);
+}
+myFunction();
+```
+- 이렇게 하면 함수 안에서 선언된 a는 if 문 안에서의 변경이 그대로 적용됩니다.
+- let 과 const는 scope이 함수 단위가 아닌 블록 단위 이므로 이러한 결점을 해결해 줄 수 있다.
+```
+function myFunction() {
+	let a = 1;
+	if(true) {
+		let a = 2;
+		console.log(a);
+	}
+	console.log(a);
+}
+myFunction();
+```
+- let과 const를 사용할 때는 같은 블록 내부에서 중복 선언이 불가능한 점만 기억하자.
+
