@@ -1,3 +1,33 @@
+2.4.1
+감싸인 요소
+- 컴포넌트에 여러 요소가 있다면 부모 요소 하나로 꼭 감싸야 한다.
+```
+render() {
+	return (
+		<h1>리액트 안녕!</h1>
+		<h2>당신은 어썸한가요?</h2>
+	);
+}
+```
+- 위 코드는 여러 요소가 부모 요소 하나로 감싸져 있지 않기 때문에 컴파일에서 에러가 발생한다.
+```
+Syntax error: Adjacent JSX elements must be wrapped in an enclosing tag
+```
+- 그래서 다음과 같이 부모 요소 하나로 감싸야 한다.
+```
+render() {
+	return (
+		<div>
+			<h1>리액트 안녕!</h1>
+			<h2>당신은 어썸한가요?</h2>
+		</div>
+	);
+}
+```
+- Virtual DOM에서 컴포넌트 변화를 감지해낼 때 효율적으로 비교할 수 있도록 컴포넌트 내부는 DOM 트리 구조 하나여야 한다는 규칙이 있기 때문이다.
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
