@@ -154,3 +154,35 @@ render() {
 - 웹 브라우저 접두어인 -mos, -webkit을 사용할 때도 마찬가지고 Mos, Webkit으로 바꾸어서 사용한다.
 - 하지만 -ms는 예외로 대문자로 바꾸지 않고 소문자 ms로 작성한다.
 
+2.4.6 class 대신 className
+
+- 요소에 class를 지정해보자. src/App.css 파일을 열고 새 클래스를 하나 작성하자.
+```
+.my-div {
+	background-color: aqua;
+	font-size : 15px;
+}
+```
+- 그 후 최상위 요소에 class를 설정해보자.
+```
+render() {
+	(...)
+	return (
+		<div class="my-div">
+			<h1>리액트 안녕!</h1>
+			<h2>{text}</h2>
+			{ condition && '보여주세요' }
+			<div style={style}></div>
+		</div>
+	);
+}
+```
+- 위와 같이 작성하면 스타일이 입혀지기는 하지만 다음과 같은 경고가 나타난다.
+```
+Warning: Invalid DOM property 'class'. Did you mean 'className'?
+```
+- 리액트에서 class를 설정할 때는 class 키워드 대신 className으로 설정해야 한다.
+- class는 이미 자바스크립트에 존재하는 키워드이기 때문이다.
+- 웹 브라우저의 DOM API에서도 자바스크립트로 클래스를 설정할 때 className 키워드를 사용한다.
+
+

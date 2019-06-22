@@ -15,7 +15,7 @@ function App() {
     msTransition: 'all'
   };
   return (
-    <div>
+    <div className="my-div">
       <h1>리액트 안녕!</h1>
       <h2>{text}</h2>
       { condition && '보여주세요' }
