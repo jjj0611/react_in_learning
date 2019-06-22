@@ -3,11 +3,12 @@ import logo, { ReactComponent } from './logo.svg';
 import './App.css';
 
 function App() {
+  const text = '당신은 어썸한가요?';
   return (
-    <Fragment>
+    <div>
       <h1>리액트 안녕!</h1>
-      <h2>다신은 어썸한가요?</h2>
-    </Fragment>
+      <h2>{text}</h2>
+    </div>
   );
 }
 
