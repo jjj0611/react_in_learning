@@ -1,5 +1,4 @@
-2.4.1
-감싸인 요소
+2.4.1 감싸인 요소
 - 컴포넌트에 여러 요소가 있다면 부모 요소 하나로 꼭 감싸야 한다.
 ```
 render() {
@@ -25,6 +24,22 @@ render() {
 }
 ```
 - Virtual DOM에서 컴포넌트 변화를 감지해낼 때 효율적으로 비교할 수 있도록 컴포넌트 내부는 DOM 트리 구조 하나여야 한다는 규칙이 있기 때문이다.
+
+2.4.1.1 Fragment
+- 리액트 v16이상에서는 Fragment 컴포넌트가 도입되었다. 즉, div 같은 것으로 감싸지 않고, 여러 요소를 렌더링 하고 싶다면 리액트를 부럴올 때 Component와 함께 Fragemnt를 불러와서 사용하면 된다.
+```
+import React, {Component, Fragment } from 'react';
+```
+``` 
+render() {
+	return (
+		<Fragment>
+			<h1>리액트 안녕!</h1>
+			<h2>당신은 어썸한가요?</h2>
+		</Fragment>
+	);
+}
+```
 
 
 
