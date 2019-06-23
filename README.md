@@ -179,4 +179,27 @@ static propTypes = {
 ```
 - 위와 같이 숫자를 props의 값으로 지정해 줄 때는 {} 안에 넣어준다.
 
+3.2.4.2 더 많은 propTypes 종류
+
+- array: 배열
+- bool: 참, 거짓
+- func: 함수
+- number: 숫자
+- object: 객체
+- string: 문자열
+- symbol: ES6 문법의 심벌 객체
+- node: 렌더링할 수 있는 모든 것(숫자, 문자열, element 또는 이들로 구성된 배열)
+- element: 리액트 요소
+- instance(MyClass): 특정 클래스의 인스턴스
+- oneOf(['Male', 'Femal']): 주어진 배열 요소 중 하나
+- oneOfType([React.PropTypes.string, React.PropTypes.number]): 주어진 배열 안의 종류 중 하나
+- arrayOf(React.PropTypes.number): 주어진 종류로 구성된 배열
+- objectOf(React.PropTypes.number): 주어진 종류의 값을 가진 객체
+- shape({name: React.PropTypes.string, age: React.PropTypes.number}): 주어진 스키마를 가진 객체
+- any: 아무 종류
+
+tip
+
+- defaultProps와 propTypes는 다른 개발자와의 협업에서 해당 컴포넌트에 어떤 props가 필요한지 쉽게 알 수 있어 개발 능률을 높일 수 있다.
+
 
