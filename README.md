@@ -161,4 +161,22 @@ class MyComponent extends Component {
 - 에러 메시지를 보면 propTypes가 잘못되었다고 알려줄 것이다.
 
 
+3.2.4.1 필수 propTypes 설정
+
+- props를 설정하지 않았을 때 오류 창을 띄우게 설정해보자.
+- propTypes를 설정할 때 뒤에 isRequired를 붙여주면 된다.
+- 이번에는 age라는 숫자 종류의 필수 props를 설정해보자.
+```
+static propTypes = {
+	name: PropTypes.string,
+	age: PropTYpes.number.isRequired
+}
+```
+- 이렇게 설정하고 age를 설정하지 않으면, 오류 메시지를 출력한다.
+- props 값을 제대로 설정해주자.
+```
+<MyComponent name="React" name={3} />
+```
+- 위와 같이 숫자를 props의 값으로 지정해 줄 때는 {} 안에 넣어준다.
+
 
