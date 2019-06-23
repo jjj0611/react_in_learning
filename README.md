@@ -59,3 +59,26 @@ class App extends Component {
 
 export default App;
 ```
+
+3.2 props
+
+props는 properties를 줄인 표현으로 컴포넌트 속성을 설정할 때 사용하는 요소.
+props 값은 해당 컴포넌트를 불러와 사용하는 부모 컴포넌트(현 상황에서는 App 컴포넌트)에서만 설정할 수 있다.
+
+props 렌터링하기 -> props 값 설정하기 -> props 기본 값 설정하기 -> props 값 검증하기
+
+
+3.2.1 JSX 내부에서 props 렌더링
+
+- MyComponent.js 파일을 수정하여 해당 컴포넌트에 name이라는 props를 렌더링하도록 설정해보자.
+- props를 렝더링 할 때는 JSX 내부에서 {}안에 감싸주면 된다.
+```
+return (
+	<div>
+		안녕하세요, 제 이름은 { this.props.name } 입니다.
+	</div>
+)
+```
+- props에 접근할 때는 이렇게 this 키워드를 사용하여 접근한다.
+
+
