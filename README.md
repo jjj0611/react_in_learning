@@ -202,4 +202,63 @@ tip
 
 - defaultProps와 propTypes는 다른 개발자와의 협업에서 해당 컴포넌트에 어떤 props가 필요한지 쉽게 알 수 있어 개발 능률을 높일 수 있다.
 
+3.3 state
+
+- props는 부모 컴포넌트가 설정하며, 컴포넌트 자신은 해당 props를 읽기 전용으로만 사용할 수 있다.
+- 컴포넌트 내부에서 읽고 업데이트 할 수 잇는 값을 사용하기 위해서 state를 써야 한다.
+- 이것은 언제나 기본 값을 미리 설정해야 사용할 수 있고, this.setState() 메서드로만 값을 업데이트 해야 한다.
+
+state 초깃값 설정하기 -> state 렌더링 하기 -> state 값 업데이트 하기
+
+
+3.3.1 컴포넌트의 생성자 메서드: constructor()
+
+- state 초깃값은 컴포넌트의 생성자 메서드인 constructor 내부에서 설정한다.
+- 생성자 메서드는 컴포넌트를 새로 만들 때 실행된다.
+```
+class MyComponent extends Component {
+	(...)
+	constructor(props) {
+		super(props);
+	}
+
+	render() {
+		(...)
+	}
+{
+```
+- 우리가 만든 MyComponent는 리액트의 Component 클래스를 상속한다.
+- 따라서 constructor 메서드를 만들어주지 않으면, 기본으로 Component 클래스의 생성자 메서드를 사용한다.
+- 직접 constructor 메서드를 작성하여 생성자 메서드에서 추가 작업을 하려면, 메서드 내부에서 부모 클래스인 Component의 constructor 메서드를 먼저 호출해야 한다.
+- 이 때 super 키워드를 사용한다. 컴포넌트를 만들 때 props 값들을 사용하므로 props를 메서드의 파라미터로 전달해야 한다.
+
+
+3.3.2 state 초깃값 설정
+
+- constructor 메서드 안에서 state의 초깃값을 지정해보자.
+```
+constructo(props) {
+	super(props);
+	this.state = {
+		number: 0
+	}
+}
+```
+- state에 number 값을 0으로 설정했다.
+
+
+3.3.3. JSX 내부에서 state 렌더링
+
+- number 값을 JSX 안에서 렌더링 해보자.
+- 이를 렌더링 하는 방법은 props를 렌더링 하는 방법과 비슷하다.
+```
+render() {
+	return (
+		<dib>
+			(...)
+			<p>숫자: {this.state.number}</p>
+		</div>
+	)
+}
+```
 
