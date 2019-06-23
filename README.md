@@ -81,4 +81,14 @@ return (
 ```
 - props에 접근할 때는 이렇게 this 키워드를 사용하여 접근한다.
 
+3.2.2 컴포넌트를 사용할 때 props 값 설정
+
+- 이번에는 App.js에서 우리가 만든 name 속성을 설정해보자.
+- props 값을 설정하는 방법은 HTML 태그에 속성을 설정하는 것과 비슷하다.
+
+```
+return (
+	<MyComponent name="React"/>
+);
+```
 
