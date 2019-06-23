@@ -125,4 +125,40 @@ class MyComponent extends Component {
 - 두 가지 방식은 빌드 작업에서 바벨을 통해 ES5 형태의 코드로 변환할 때, 결국 동일한 결과를 보인다.
 - 하지만 좀더 간결한 코드 작성을 위해 두번째 방식을 주로 사용하도록 하겠다.
 
+3.2.4 props 검증: propsTypes
+
+- 컴포넌트의 필수 props를 지정하거나 props 타입(type)을 지정할 때는 propTypes를 사용한다.
+- 컴포넌트의 propTypes를 지정하는 방법은 defaultProps를 설정하는 것과 비슷하다.
+- propTypes를 사용하려면 우선 코드 위쪽에 propTypes를 불러와야 한다.
+
+```
+import PropTypes from 'prop-types';
+```
+- 그 다음에는 클래스 밖에서 설정해도 된다.
+```
+class MyComponent extends Component {
+(...)
+}
+
+MyComponent.propTypes = {
+	name: PropTypes.String
+}
+```
+- class 내부에서 transform-class-properties 문법을 사용하여 설정할 수도 있다.
+```
+class MyComponent extends Component {
+	static defaultProps = {
+		name : '기본이름'
+	}
+	static propTypes = {
+		name : PropTypes.String
+	}
+	(...)
+}
+```
+- 이렇게 하면 name prop의 타입을 문자열(String)으로 설정한 것이다.
+- App.js에서 name값으로 문자열 대신 숫자를 입력해보고 개발자 도구를 살펴보면 에러가 뜬 것을 볼 수 있다.
+- 에러 메시지를 보면 propTypes가 잘못되었다고 알려줄 것이다.
+
+
 
