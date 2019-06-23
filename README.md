@@ -92,3 +92,37 @@ return (
 );
 ```
 
+3.2.3 props 기본 값 설정: defaultProps
+
+- App.js에 name 속성을 지정해주던 코드를 삭제하면, 해당 부분은 공백으로 뜨게 된다.
+- 이렇게 name 값을 직접 지정해주지 않았을 때, 기본으로 들어가는 속성을 지정할 수 있는 것이 defaultProps이다.
+- defaultProps를 지정하는 전통적인 방법은 아래 코드와 같다. 해당 속성을 가진 클래스에서
+```
+class MyComponent extends Component {
+(...)
+}
+
+MyComponent.defaultProps = {
+	name : '기본 이름'
+}
+```
+- 또 다른 방법은 클래스 내부에서 정의하는 것인데, 이 방법은 일반적인 ES6 문법에서는 작동하지 않고, ES6 stage-2에서 소개한 transform-class-properties 문법으로 사용할 수 있다.
+- create-react-app으로 만든 프로젝트는 기본적으로 이 문법을 적용하기 때문에 따로 작업할 것이 없다.
+```
+class MyComponent extends Component {
+	static defaultProps = {
+		name: '기본 이름'
+	}
+	render() {
+		return (
+			<div>
+				안녕하세요, 제 이름은 { this.props.name } 입니다.
+			</div>
+		);
+	}
+}
+```
+- 두 가지 방식은 빌드 작업에서 바벨을 통해 ES5 형태의 코드로 변환할 때, 결국 동일한 결과를 보인다.
+- 하지만 좀더 간결한 코드 작성을 위해 두번째 방식을 주로 사용하도록 하겠다.
+
+
