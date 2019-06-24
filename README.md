@@ -74,4 +74,8 @@
 
 - src 디렉터리 내부에 EventPractice.js 파일을 만들어보고 컴포넌트 초기 코드를 작성해보자.
 
+4.2.1.2 App.js에서 EventPractice 불러오기
+
+- App.js에서 import로 EventPractice를 불러오고 렌더링해보자.
+
 
