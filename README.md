@@ -206,4 +206,76 @@ render() {
 - 컴포넌트에 임의 메서드를 만들면 기본적으로 this에 접근할 수 없다.
 - 따라서 생성자(constructor)에서 각 메서드를 this와 바인딩해주어야 한다.
 - 즉, 메서드에서 this를 사용하도록 묶어주는 것이다.(이 작업이 없으면 this를 부를 때 undefined가 리턴된다.)
+- 위에 보면 this.handleChange에 this.handleChange.bind(this) this를 바인딩한 값을 할당해서 정의해주어야 한다.
 
+
+4.2.3.2 Property Initializer Syntax를 사용한 메서드 작성
+
+- 메서드 바인딩은 생성자 메서드에서 하는 것이 정석이다.
+- 하지만 이 작업이 불편할 수도 있다. 새 메서드를 만들 때마다 constructor도 수정해야 하기 때문이다.
+- 바벨의 transform-class-properties 문법을 사용하면 더 간단히 화살표 함수 형태로 메서드를 정의해서 가능하게 된다.
+```
+(...)
+handleChange = (e) => {
+	this.setState({
+		message: e.target.value
+	});
+}
+
+handleClick = () => {
+	alert(this.state.message);
+	this.setState({
+		message: ''
+	});
+}
+(...)
+```
+
+- 이렇게 하면 훨씬 깔끔해진다.
+
+
+4.2.4 input 여러 개를 핸들링
+
+- 우리는 input 값을 state에 넣는 방법을 배웠다. input이 여러개일 때는 어떻게 작업할까?
+- 메서드를 여러게 만드는 방법도 있지만, event 객체를 활용하여 처리할 수 있다.
+- e.target.name 값을 사용하면 된다.
+- e.target.name이 지금은 message인데, 이 값을 사용하여 state를 설정하면 쉽게 해결할 수 있다.
+```
+(...)
+state = {
+	username= '',
+	message= ''
+}
+
+handleChange = (e) => {
+	this.setState({
+		[e.target.name]: e.target.value
+	});
+}
+
+handleClick = () => {
+	alert(this.state.username + ': ' + this.state.message);
+	this.setState({
+		username: '',
+		message: ''
+	});
+}
+
+(...)
+	<input
+	type="text"
+	name="username"
+	placeholder="유저명"
+	value={this.state.username}
+	onChange={this.handleChange}
+	/>
+(...)
+```
+- 여기에서는 이 코드를 기억하자
+```
+this.setState({
+	[e.target.value]: e.target.value
+});
+```
+- [] 안에 있는 것을 key 값으로 사용하는 것이다. 그러나 괄호가 없으면 오류가 발생한다.
+	
