@@ -262,3 +262,30 @@ render() {
 }
 ```
 
+3.3.4 state 값 업데이트: setState()
+
+- state 값을 업데이트 해보자. state 값을 업데이트 할 때는 this.setState() 메서드를 사용한다.
+```
+ this.setState({
+	수정할 필드 이름: 값,
+	수정할 또 다른 필드 이름: 값
+});
+```
+- 버튼을 하나 렌더링하고, 이 버튼을 누를 때마다 number 값이 1씩 추가되도록 설정해보자.
+```
+render() {
+	return (
+		<div>
+			(...)
+			<button onClick={() => {
+				this.setState({
+					number: this.state.number + 1
+				})
+				}
+			}>더하기</button>
+		</div>
+	)
+}
+```
+
+
