@@ -9,11 +9,9 @@ class MyComponent extends Component {
         name : PropTypes.string,
         age: PropTypes.number.isRequired
     }
-    constructor(props) {
-        super(props);
-        this.state = {
-            number : 0
-        }
+
+    state = {
+        number : 0
     }
     render() {
         return (

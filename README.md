@@ -288,4 +288,49 @@ render() {
 }
 ```
 
+3.3.5 state를 constructor에서 꺼내기
 
+- 초기 state는 constructor 메서드에서 정의해야 하지만, defaultProps와 propTypes를 정의할 때 사용한 transform-class-properties 문법으로 constructor 바깥에서 정의할 수도 잇다.
+```
+class MyComponent extends Component {
+	static defaultProps = }
+		name: '기본이름'
+	}
+	static propTypes = {
+		name: PropTypes.string
+		age: PropTypes.number.isRequired
+	}
+	state = {
+		number: 0
+	}
+	render() {
+	(...)
+	}
+}
+```
+
+
+3.3.6 state 값을 업데이트 할 때 주의사항
+
+- state 값을 업데이트 할 때는 항상 .setState로만 업데이트 해야한다.
+```
+this.state.number = this.state.number + 1;
+this.state.someArray.push(3);
+this.state.someObject.value=3;
+```
+- 위와 같은 코드는 잘못된 코드이다.
+- setState() 메서드가 하는 역할은 파라미터로 전달받은 필드를 업데이트 한 후 컴포넌트가 리렌더링하도록 트리거 하는 것이다.
+- 하지만 이렇게 state에 직접 접근하여 수정하면 컴포넌트를 자동으로 리렌더링하지 않습니다.
+- 이 때 this.forceUpdate() 메서드를 호출하여 강제로 리렌더링을 시작할 수 있다.
+- 하지만 이 방식은 비효율적이므로 웬만하면 사용을 피해야한다.
+- 배열이나 객체를 업데이트 하는 경우엔 배열 객체 사본을 만들고, 값을 수정한 하고, 사본으로 값을 설정하는 방식으로 지정한다.
+
+
+3.4 정리
+
+- 컴포넌트를 만들어서 내보내고 불러오는 방법과 props, state를 사용하는 방법을 익혔다.
+- props와 state는 둘 다 컴포넌트에서 사용하거나 렌더링할 데이터들을 담고 있으므로 비슷해보이지만, 역할은 매우 다르다.
+- props는 부모 컴포넌트가 설정하고, state는 컴포넌트 자체적으로 지닌 값으로 컴포넌트 내부에서 값을 업데이트 한다.
+- props를 사용한다고 해서 값이 무조건 고정적인 것은 아니다.
+- 부모 컴포넌트의 state를 자식 컴포넌트의 props로 전달하고, 자식 컴포넌트에서 특정 이벤트가 발생할 때 부모 컴포넌트의 메서드를 호출하면 props를 유동적으로 사용할 수 있다.
+ 
