@@ -155,3 +155,55 @@ render() {
 }>확인</button>
 ```
 
+
+4.2.3 임의 메서드 만들기
+
+- 이벤트에 실행할 자바스크립트 코드를 전달하는 것이 아니라, 함수 형태의 값을 전달한다.
+- 그래서 이벤트를 처리할 때 렌더링을 하는 동시에 함수를 만들어서 전달했다.
+- 함수를 미리 만들어 준비하는 방법이 가독성 측면에서 훨씬 좋다.(상황에 따라 렌더링 메서드 내부에서 함수를 만드는 것이 편할 때도 있다.)
+- 앞서 onChange와 onClick에 전달한 함수를 따로 빼내서 컴포넌트 임의 메서드를 만들어보자.
+
+
+4.2.3.1 기본방식
+
+```
+(...)
+constructor(props) {
+	super(props);
+	this.handleChange = this.handleChange.bind(this);
+	this.handleClick = this.handleClick.bind(this);
+}
+
+handleChange(e) {
+	this.setState({
+		message : e.target.value
+	});
+}
+
+handleClick(e) {
+	alert(this.state.message);
+	this.setState({
+		message: ''
+	});
+}
+
+render() {
+	return (
+		<div>
+			<h1>이벤트 연습</h1>
+			<input
+			type="text"
+			name="message"
+			placeholder="아무거나 입력하세요'
+			value={this.state.message}
+			onChange={this.handleChange}
+			/>
+			<button onClick={this.handleClick}>확인</button>
+		</div>
+	);
+}
+```
+- 컴포넌트에 임의 메서드를 만들면 기본적으로 this에 접근할 수 없다.
+- 따라서 생성자(constructor)에서 각 메서드를 this와 바인딩해주어야 한다.
+- 즉, 메서드에서 this를 사용하도록 묶어주는 것이다.(이 작업이 없으면 this를 부를 때 undefined가 리턴된다.)
+
