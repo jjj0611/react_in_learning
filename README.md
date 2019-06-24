@@ -79,3 +79,41 @@
 - App.js에서 import로 EventPractice를 불러오고 렌더링해보자.
 
 
+4.2.2 onChange 이벤트 핸들링
+
+4.2.2.1 onChange 이벤트 설정
+
+- EventPractice 컴포넌트에 input 요소를 렌더링하는 코드와 해당 요소에 onChange 이벤트를 설정하는 코드를 작성해보자.
+```
+class EventPractice extends Component {
+	render() {
+		return (
+			<div>
+				<h1>이벤트 연습</h1>
+				<input
+				type="text"
+				name="message"
+				placeholder="아무거나 입력해보세요"
+				onChange={
+					(e) => {
+						console.log(e);
+					}
+				}
+				/>
+			</div>
+		)
+	}
+}
+```
+- 위와 같이 입력하고, 아무거나 입력하면 이벤트 객체가 콘솔에 나타난다.
+- 콘솔에 기록되는 e 객체는 SyntheticEvent로 웹 브라우저의 네이티브 이벤트를 감싸는 객체이다.
+- 네이티브 이벤트와 인터페이스가 같으므로 순수 자바스크립트에서 HTML 이벤트를 다룰 때와 똑같이 사용하면 된다.
+- 예를 들어 onChange 이벤트 발생시, 변할 인풋 값인 e.target.value를 콘솔에 기록해보자.
+```
+onChange={
+	(e) => {
+		console.log(e.target.value);
+	}
+}
+```
+
