@@ -278,4 +278,36 @@ this.setState({
 });
 ```
 - [] 안에 있는 것을 key 값으로 사용하는 것이다. 그러나 괄호가 없으면 오류가 발생한다.
-	
+
+
+4.2.5 onKeyPress 이벤트 핸들링
+
+- 키를 눌렀을 때 발생하는 keyPress 이벤트를 처리하는 방법에 대해 알아보자.
+- message 인풋에서 enter를 눌렀을 때 handleClick 메서드를 호출하도록 해보자.
+```
+(...)
+handleKeyPress = (e) => {
+	if(e.key === 'Enter') {
+		this.handleClick();
+	}
+}
+
+(...)
+	<input
+	type="text"
+	name="message"
+	placeholder="아무거나 입력해보세요"
+	value={this.state.message}
+	onChange={this.handleChange}
+	onKeyPress={this.handleKeyPress}
+	/>
+(...)
+```
+- 두 번째 텍스트 인풋에서 텍스트를 입력하고 enter를 누르면 handleClick 메서드를 실행하게 된다.
+
+
+4.3 정리
+
+- 리액트에서 이벤트를 다루는 것은 순수 자바스크립트 혹은 jQuery를 사용한 웹 애플리케이션에서 이벤트를 다루는 것과 비슷하다.
+- 자바스크립트에 익숙하다면 쉽게 활용할 수 있을 것이다.
+
