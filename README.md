@@ -139,3 +139,19 @@ render() {
 (...)
 ```
 
+4.2.2.3 버튼을 누를 때 message 값을 공백으로 설정
+
+- 우리가 입력한 값이 state에 잘 들어 갔는지, 인풋에서 그 값을 제대로 반영하는지 한번 검증해보자.
+- input 요소 아래 쪽에 button을 하나 만들고, 클릭 이벤트가 발생하면 현재 message 값을 메시지 박스로 띄운 후 message 값을 공백으로 설정해보자.
+```
+(...)
+<button onClick={
+	() => {
+		alert(this.state.message);
+		this.setState({
+			message: ''
+		});
+	}
+}>확인</button>
+```
+
