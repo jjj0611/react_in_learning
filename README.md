@@ -117,3 +117,25 @@ onChange={
 }
 ```
 
+4.2.2.2 state에 input 값 담기
+
+- 생성자 메서드 constructor에서 state를 초깃값으로 설정하고, 이벤트 핸들링 함수 내부에서 this.setState 메서드를 호출하여 state를 업데이트 해보자.
+- 그 다음 input의 value 값을 state에 있는 값으로 설정해보자.
+```
+(...)
+state={
+	message: ''
+}
+render() {
+	return (
+		(...)
+		(e) => {
+			this.setState({
+				message: e.target.value
+			})
+		}
+	)
+}
+(...)
+```
+
