@@ -57,3 +57,83 @@
 - componentWillUnmount: 컴포넌트가 웹 브라우저상에서 사라지기 전에 호출하는 메서드
 
 
+7.2 살펴보기
+
+
+7.2.1 render() 함수
+
+- 이 메서드는 컴포넌트 모양새를 정의한다. 그렇기에 컴포넌트에서 가장 중요한 메서드라고 할 수 있다.
+- 라이프사이클 메서드 중 유일하게 필수 메서드이기도 하다.
+- 이 메서드 안에서 this.props와 this.state에 접근할 수 있으며, 리액트 요소를 반환한다.
+- 요소는 div 같은 태그가 될 수도 있고, 따로 선언한 컴포넌트가 될 수도 있다.
+- 아무것도 보여주고 싶지 않다면 null 값이나 false 값을 반환하도록 한다.
+- 이 메서드 안에서는 절대 state를 변형해서는 안되며, 웹 브라우저에 접근해서도 안된다.
+- DOM 정보를 가져오거나 변화를 줄 때는 componentDidMount에서 처리해야 한다.
+
+
+7.2.2 constructor 메서드
+
+- 이것은 컴포넌트의 생성자 메서드로 컴포넌트를 만들 때 처음으로 실행된다.
+- 이 메서드 안에서는 초기 state를 정할 수 있다.
+
+
+7.2.3 getDerivedStateFromProps 메서드
+
+- 리액트 v16.3 이후에 새로 만든 라이프사이클 메서드이다.
+- props로 가져온 값을 state에 동기화시키는 용도로 사용된다.
+- 컴포넌트를 마운트하거나 props를 변경할 때 호출한다.
+```
+static getDerivedStateFromProps(nextProps, prevState) {
+	if(nextProps.value != prevState.value) { // 조건에 따라 특정 값 동기화
+		return { value : nextProps.value};
+	}
+	return null; // state를 변경할 필요가 없다면 null을 반환
+}
+```
+
+
+7.2.4 componentDidMount 메서드
+
+- 컴포넌트를 만들고 첫 렌더링을 다 마친 후 실행한다.
+- 다른 자바스크립트 라이브러리 또는 프레임워크의 함수를 호출한다.
+- 또는 이벤트 등록, setTimeout, setInterval, 네트워크 요청 같은 비동기 작업을 처리하면 된다.
+
+
+7.2.5 shouldComponentUpdate 메서드
+
+- props 또는 state를 변경했을 때, 리렌더링을 시작할지 여부를 지정하는 메서드이다.
+- 이 메서드는 반드시 true 혹은 false 값을 반환해야 한다.
+- 컴포넌트를 만들 때 이 메서드를 따로 생성하지 않으면 기본적으로 언제나 true를 반환한다.
+- 이 메서드가 false를 반환하면 업데이트 과정은 여기서 중단한다.
+- 이 메서드 안에서 현재 props와 state는 this.props, this.state로 접근한다.
+- 새로 설정될 props와 state는 nextProps와 nextState로 접근할 수 있다.
+- 프로젝트 성능을 최적화하거나, 상황에 맞는 알고리즘을 작성하여 리렌더링을 방지할 때는 false를 반환하게 한다.
+
+
+7.2.6 getSnapShotBeforeUpdate 메서드
+
+- 리액트 v16.3 이후 만든 메서드이다.
+- 이 메서드는 render 메서드를 호출한 후 DOM에 변화를 반영하기 바로 직전에 호출하는 메서드이다.
+- 반환하는 값은 componentDidUpdate에서 세 번째 파라미터인 snapshot 값으로 전달 받을 수 있다.
+- 주로 업데이트하기 직전의 값을 참고할 때 활용된다.(ex. 스크롤바의 위치 유지)
+```
+getSnapshotBeforeUpdate(prevProps, prevState) {
+	if(prevState.array != this.state.array) {
+		const { scrollTop, scrollHeight } = this.list
+		return { scrollTop, scrollHeight };
+	}
+}
+
+
+7.2.7 componentDidUpdate 메서드
+
+- 리렌더링을 완료한 후 실행되는 메서드이다.
+- 업데이트가 끝난 직후이므로, DOM 관련 처리를 해도 무방하다.
+- prevProps 또는 prevState를 사용하여 컴포넌트가 이전에 가졌던 데이터에 접근할 수 있다.
+- getSnapshotBeforeUpdate에서 반환한 값이 있다면 여기에서 snapshot 값을 전달받을 수 있다.
+
+
+7.2.8 componentWillUpdate 메서드
+
+- 컴포넌트를 DOM에서 제거할 때 실행된다.
+- componentDidMount에서 등록한 이벤트, 타이머, 직접 생성한 DOM이 있다면 여기에서 제거 작업을 해야한다.
