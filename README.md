@@ -49,3 +49,29 @@ console.log(result);
 ```
 - var 키워드 대신 const를 사용했고, function(){} 대신 화살표 함수를 사용했다.
 
+
+6.2 데이터 배열을 컴포넌트 배열로 map하기
+
+- 기존 배열로 컴포넌트로 구성된 배열을 생성할 수도 있다.
+
+6.2.1 예제 컴포넌트 생성
+
+IterationSample.js
+```
+class IterationSample extends Component {
+	render() {
+		const names = ['눈사람', '얼음', '눈', '바람'];
+		const nameList = names.map( (name) => (<li>{name}</li>) );
+		
+		return (
+			<ul>
+				{nameList}
+			</ul>
+		);
+	}
+}
+```
+
+- 문자열로 구성된 배열을 선언하고, 그 배열 값을 사용하여 <li>...</li> JSX 코드로 된 배열을 새로 생성한 후 nameList에 담는다.
+- map 함수에서 JSX을 작성할 때는 다른 예제 처럼 DOM요소를 작성해도 되고, 컴포넌트를 사용해도 된다.
+
