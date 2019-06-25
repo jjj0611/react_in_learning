@@ -120,3 +120,59 @@ const nameList = names.map( (name, index) => (<li key={index} >{name}</li>
 ```
 - 이제 개발자 도구를 보면 더 이상 경고 메시지를 출력하지 않는다.
 
+
+6.4 응용
+
+- 지금까지 배운 내용들을 응용해보자. 유동적인 데이터를 렌더링 하는 것이다.
+초기 state 설정하기 -> 데이터 추가 기능 구현하기 -> 데이터 제거 기능 구현하기
+
+
+6.4.1 state에 초기 데이터 담기
+
+- 기존 상수에 담았던 배열을 컴포넌트의 state에 담아보자.
+```
+(...)
+state = {
+	names: ['눈사람', '얼음', '눈', '바람']
+};
+(...)
+const nameList = this.state.names.map(...)
+```
+
+6.4.2 데이터 추가 기능 구현
+
+- 데이터 추가 기능을 구현하려면 input과 button을 렌더링하고, 이벤트 핸들러 메서드를 만들어주어야 한다.
+```
+(...)
+state = {
+	names: ['눈사람', '얼음', '눈', '바람'],
+	name: ''
+}
+
+handleChange = (e) => {
+	this.setState({
+		name : e.target.value
+	});
+}
+
+handleInsert = () => {
+	this.setState({
+		names: this.state.names.concat(this.state.name),
+		name: ''
+	})
+}
+
+(...)
+<input
+	onChange={this.handleChange}
+	value={this.state.name}/>
+<button onClick={handleInsert}>추가</button>
+(...)
+```
+- input 값은 기본 값이 공백으로 state에 저장했고, 컴포넌트 위쪽에 input과 button이 위치할 수 있도록 렌더링될 코드를 div 태그로 감쌌다.
+- handleInsert에서 데이터를 추가하는 방법으로 this.state.names.push('...')와 같은 방법을 생각했을 수 있다.
+- 하지만 3장에서 이미 state는 언제나 setState로 값을 변경한다고 했다.
+- 직접 변경하게 되면 자동으로 리렌더링을 트리거하지 않기 때문이다.
+- 따라서 기존 배열을 직접 수정하지 않고, 기존 배열과 새 값을 합친 새 배열을 생성하는 concat 함수를 사용하여 데이터를 추가한다.
+
+
