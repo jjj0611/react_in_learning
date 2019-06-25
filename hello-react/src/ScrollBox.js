@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 class ScrollBox extends Component {
 
     scrollToBotton = () => {
-        const { scrollHeigth, clientHeight } = this.box;
+        const { scrollHeight, clientHeight } = this.box;
         /* 앞 코드에는 비구조화 할당 문법을 사용했다.
             다음과 같은 의미입니다.
             const scrollHeight = this.box.scrollHeight;
             const clientHeight = this.box.clientHeight;
         */
-       this.box.scrollTop = scrollHeigth - clientHeight;
+       this.box.scrollTop = scrollHeight - clientHeight;
     }
 
     render() {

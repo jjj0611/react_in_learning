@@ -319,3 +319,31 @@ render() {
 }
 ```
 
+
+5.3.4 컴포넌트에 ref 달고 내부 메서드 사용
+
+- App 컴포넌트에서 ScrollBox에 ref를 달고 버튼을 만들어 누르면 ScrollBox 컴포넌트의 ScrollToBottom 메서드를 실행하도록 작성해보자.
+```
+<ScrollBox ref={(ref) => this.scrollBox=ref}/>
+<button onClick={() => this.scrollBox.scrollToBottom()}>
+맨 밑으로
+</button>
+```
+
+- 여기서 주의점은 문법상으로는 onClick={this.scrollBox.scrollToBottom}으로 작성해도 틀린 것은 아니다.
+- 하지만 컴포넌트가 처음 렌더링 될 때는 this.scrollBox 값이 undefined이므로 this.scrollBox.scrollToBottom을 읽어오는 과정에서 오류가 발생한다.
+- 화살표 함수 문법으로 새로운 함수를 만들고, 내부에서 this.scrollBox.scrollToBottm 메서드를 실행하면 this.scrollBox.scrollToBottom 값을 읽어와서 에러가 나지 않는다.
+
+
+5.4 정리
+
+- 컴포넌트 내부에서 DOM에 직접 접근해야 할 때는 ref를 사용한다.
+- 먼저 ref를 사용하지 않고도 원하는 기능을 구현할 수 있는지 꼭 고려한 후 활용해야 한다.
+
+중요점
+- 서로 다른 컴포넌트끼리 데이터를 교류할 때 ref를 사용한다면 이는 잘못 사용된 것이다.
+- 컴포넌트에 ref를 달고, 그 ref를 다른 컴포넌트로 전달하면 가능하지만, 이는 리액트의 사상에 어긋난 설계 방법이다.
+- 앱 구조가 커지면 유지 보수가 불가능해질 정도이다.
+- 컴포넌트끼리 데이터를 교류할 때는 언제나 데이터를 부모<->자식 흐름으로 교류해야 한다.
+- 추후에 리덕스를 사용하여 효율적으로 교류하는 방법에 대해 알아보자.
+
