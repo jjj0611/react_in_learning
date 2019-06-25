@@ -129,3 +129,51 @@ export default ValidationSample;
 3) Canvas 요소에 그림 그리기 등
 - 이때는 어쩔 수 없이 DOM에 직접 접근해야 하는데, 이때 바로 ref를 사용한다.
 
+
+5.2 ref 사용
+
+
+5.2.1 사용법
+
+- ref를 달아야 하는 DOM에서 ref 속성을 추가할 때는 props를 설정하듯이 하면 된다.
+- ref 값으로는 콜백 함수를 전달한다. 
+- 콜백 함수는 ref를 파라미터로 가지며, 콜백 함수 내부에서 컴포넌트의 멤버 변수에 ref를 담는 코드를 작성한다.
+```
+<input ref={(ref) => {this.input=ref}}></input>
+```
+- 이렇게 하면 this.input은 input 요소의 DOM을 가리키게 된다.
+- ref 이름은 자유롭게 지정한다.
+- DOM 타입과 관계 없이 this.superman = ref처럼 마음대로 지정하면 된다.
+
+5.2.2 적용
+
+- 앞에서 만든 ValidationSample 컴포넌트의 렌더링 결과를 보면 버튼을 눌렀을 때 다시 input으로 돌아가지 않는다.
+- 버튼을 한 번 눌렀을 때, 포커스가 다시 input 쪽으로 자동으로 넘어가도록 코드를 작성해보자.
+
+
+5.2.2.1 input에 ref 달기
+
+- ValidationSample 컴포넌트에도 ref를 달아보자.
+```
+(...)
+	<input
+	ref={(ref) => this.input=ref}
+	(...)
+	/>
+```
+
+5.2.2.2 버튼 onClick 이벤트 코드 수정
+
+- 버튼에서 onClick 이벤트가 발생할 때 input에 포커스를 주도록 코드를 수정해보자.
+- 이제 this.input이 컴포넌트 내부의 input 요소를 가리키고 있으니 일반 DOM을 다루듯이 코드를 작성하면 된다.
+
+```
+handleButtonClick = () => {
+	this.setState({
+		clicked: true,
+		validated: this.state.password === '0000'
+	});
+	this.input.focus();
+}
+```
+
