@@ -75,3 +75,18 @@ class IterationSample extends Component {
 - 문자열로 구성된 배열을 선언하고, 그 배열 값을 사용하여 <li>...</li> JSX 코드로 된 배열을 새로 생성한 후 nameList에 담는다.
 - map 함수에서 JSX을 작성할 때는 다른 예제 처럼 DOM요소를 작성해도 되고, 컴포넌트를 사용해도 된다.
 
+6.2.2 App 컴포넌트에서 예제 컴포넌트 렌더링
+
+- App 컴포넌트에서 기존 코드를 지우고, IterationSample 컴포넌트를 불러와 렌더링 하자.
+
+```
+render() {
+	return (
+		<IterationSample />
+	);
+}
+```
+- 코드를 저장하고 결과를 보면 렌더링이 된 것을 볼 수 있다.
+- 하지만 크롬 개발자 도구에서 콘솔을 열어보면 "key" prop이 없다는 경고 메시지를 표시했다.
+- key가 무엇인지 알아보자.
+
