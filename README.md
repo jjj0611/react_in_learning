@@ -93,3 +93,69 @@ create-react-app styling-react
 - 그 다음 해당 디렉토리로 들어가서 yarn eject 명령어를 실행해보자.
 - 이 명령어를 입력하면 node_modules/react-scripts 경로에 내장된 리액트 프로젝트의 환경설정 파일들을 프로젝트 루트 경로로 이동한다.
 
+
+
+9.1 CSS Module
+
+- CSS Module은 CSS를 모듈화하여 사용하는 방식이다.
+- CSS 클래스를 만들면 자동으로 고유한 클래스네임을 생성하여 스코프를 지역적으로 제한한다.
+- 모듈화된 CSS를 webpack으로 불러오면 사용자가 정의한 클래스 네임과 고유화된 클래스네임으로 구성된 객체를 반환한다.
+```
+{
+	box: 'src-App__box--mjrNr'
+}
+- 그리고 적용할 때는 className={styles.box} 방식으로 사용한다.
+
+
+9.1.1 CSS Module 활성화
+
+- webpack 설정으로 들어가서 CSS Module을 활성화해보자.
+- create-react-app에 이미 css-loader를 적용했으니 이 로더의 옵션만 조금 수정하면 된다.
+- config/webpack.config.dev.js 파일을 열어 css-loader를 찾아보자. 그럼 다음의 설정들이 보인다.
+```
+{
+test: /\.css$/,
+use: [
+	require.resolce('style-loader'),
+	{
+		loader: require.resolve('css-loader'),
+		options: {
+			importLoaders: 1,
+		},
+	},
+	{
+		loader: require.resolve('postcss-loader');
+		options: {
+			// Necessary for external CSS imports to work.
+			// https://github.com/facebookincubator/create-react-app/issues/2677
+			ident: 'postcss',
+			plugins: () => [
+				require('postcss-flexbugs-fixes'),
+				autoprefixer({
+					browsers: [
+						'>1%',
+						'last 4 versions',
+						'Firefox ESR',
+						'not ie < 9', //React doesn't support IE8 anyway.
+					],
+					flexbox: 'no-2009',
+				}),
+			],
+		},
+	},
+	],
+},
+```
+
+- CSS를 불러오는 과정에서 총 세 가지 로더를 사용했다. 
+- style-loader는 스타일을 불러와 웹 페이지에서 활성화하는 역할을 한다.
+- css-loader는 css 파일에서 import와 url(...) 문을 webpack의 require 기능으로 처리하는 역할을 한다.
+- postcss-loader는 모든 웹 브라우저에서 입력한 CSS구문이 제대로 작동할 수 있도록 자동으로 -webkit, -mos, -ms 등 접두사를 붙여준다.
+- css-loader의 options에서 CSS Module을 사용하도록 설정하면 된다.
+```
+modules: ture,
+localIdentName: '[path][name]__[local]--[hash:base64:5]'
+```
+- 첫번째 속성 modules는 CSS Module을 활성화시켜준다.
+- 두번째 속성 localIdentName은 CSS Module에서 고유하게 생성되는 클래스 네임 형식을 결정한다.
+	
