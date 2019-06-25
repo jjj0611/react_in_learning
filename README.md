@@ -232,3 +232,40 @@ class LifeCycleSample extends Component {
 - getSnapshotBeforeUpdate는 DOM에 변화가 일어나기 직전의 색상 속성을 snapshot 값으로 반환하여 이것을 componentDidUpdate에서 조회할 수 있게 했다.
 - 추가로 shouldComponentUpdate 메서드에서 state.number 값의 마지막 자릿수가 4면 리렌더링을 취소하도록 했다.
 
+
+7.3.2 App 컴포넌트에서 예제 컴포넌트 사용
+
+App.js
+```
+(...)
+function getRandomColor() {
+	return '#' + Math.floor(Math.random() * 16777326).toString(16);
+}
+
+class App extends Component {
+	state = {
+		color: '#000000'
+	}
+	
+	handleClick = () => {
+		this.setState({
+			color: getRandomColor()
+		});
+	}
+	
+	render() {
+		return (
+			<div>
+				<button onClick=Pthis.handleClick}>랜덤 색상</button>
+				<LifeCycleSample color={this.state.color}/>
+			</div>
+		);
+	}
+}
+```
+- getRandomColor 함수는 state의 color 값을 랜덤 색상으로 설정한다.
+- 16777215는 hex로 표현하면 ffffff가 되므로 해당 코드는 000000부터 ffffff 값을 반환한다.
+- 버튼을 렌더링하고, 누를 때마다 getRandomColor 메서드가 호출되기 이벤트를 설정하며,
+- 불러온 LifeCycleSample 컴포넌트에 color 값을 props로 설정한다.
+
+
