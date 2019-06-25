@@ -177,3 +177,145 @@ handleButtonClick = () => {
 }
 ```
 
+
+5.3 컴포넌트에 ref 달기
+
+- 리액트에서는 컴포넌트에도 ref를 달 수 있다.
+- 이 방법은 주로 컴포넌트 내부에 있는 DOM을 컴포넌트 외부에서 사용할 때 쓴다.
+- 컴포넌트에 ref를 다는 방법은 DOM에 ref를 다는 방법과 똑같다.
+
+
+5.3.1 사용법
+
+```
+<MyComponent
+	ref={(ref) => {this.myComponent=ref}}
+/>
+```
+
+- 이렇게 하면 MyComponent 내부 메서드 및 멤버 변수에도 접근할 수 있다.
+- 즉, 내부의 ref에도 접근할 수 있게 된다.(ex. myComponent.handleClick, myComponent.input 등)
+
+- 이번에는 스크롤 박스가 있는 컴포넌트를 하나 만들고, 스크롤 바를 아래로 내리는 작업을 부모 컴포넌트에서 실행해보자.
+
+ScrollBox 컴포넌트 만들기 -> 컴포넌트에 ref 달기 -> ref를 이용하여 컴포넌트 내부 메서드 호출하기
+
+
+5.3.2 컴포넌트 초기 설정
+
+- 먼저 ScrollBox라는 컴포넌트 파일을 만들자.
+- JSX의 인라인 스타일링 문법으로 스크롤 박스를 만들어보자. 그리고 최상위 DOM에 ref를 달아보자.
+
+
+5.3.2.1 컴포넌트 파일 생성
+
+ScrollBox.js
+```
+class ScrollBox extends Component {
+	render() {
+		const style = {
+			border: '1px solid black',
+			height: '300px',
+			width: '300px',
+			overflow: 'auto',
+			position: 'relative'
+		};
+		const innerStyle = {
+			width: '100%',
+			height: '650px',
+			background: 'linear-gradient(white, black)'
+		}
+		return (
+			<div
+			style={style}
+			ref={(ref) => {this.box=ref}}>
+				<div style={innerStyle}/>
+			</div>
+		);
+	}
+}
+export default ScrollBox;
+```
+
+5.3.2.2 App 컴포넌트에서 스크롤 박스 컴포넌트 렌더링
+
+- ValidationSample은 삭제하고, ScrollBox를 렌더링 해주자.
+```
+<div>
+	<ScrollBox/>
+</div>
+```
+
+
+5.3.3 컴포넌트에 메서드 생성
+
+- 컴포넌트에 스크롤바를 맨 아래쪽으로 내리는 메서드를 만들자.
+- 자바스크립트로 스크롤바를 내릴 때는 DOM 노드가 가진 다음 값들을 사용한다.
+```
+- scrollTop: 세로 스크롤바 위치(0~350)
+- scrollHeight: 스크롤 박스 내부의 높이(650)
+- clientHeight: 스크롤 박스 외부의 높이(300)
+```
+- 스크롤바를 맨 아래쪽으로 내리려면 scrollHeigth에서 clientHeight을 빼면 된다.
+
+```
+scrollToBotton = () => {
+	const { scrollHeight, clientHeight } = this.box;
+	this.box.scrollTop = scrollHeight - clientHeight;
+}
+```
+- 이렇게 만든 메서드는 부모 컴포넌트인 App  컴포넌트에서 ScrollBox에 ref를 달면 사용할 수 있다.
+
+
+Tip. ES6의 비구조화 할당 문법
+- 비구조화 할당 문법은 객체에서 특정 값을 추출하여 따로 레퍼런스를 만들 때 유용하다.
+```
+const object = {
+	foo: 1,
+	bar: 2
+};
+
+const { foo, bar } = object;
+console.log(foo, bar);
+```
+- 이 문법은 함수의 파라미터를 설정할 때도 동일하게 적용할 수 있다.
+```
+const obejct = {
+	foo: 1,
+	bar: 2
+}
+
+function print({foo, bar}) {
+	console.log(foo, bar);
+}
+
+print(object);
+```
+
+- 비구조화 할당 문법은 컴포넌트에서 state나 props를 참조할 때 주로 사용한다.
+- 주로 코드의 가독성과 편리함 때문에 사용하고, 무조건 사용해야 하는 것은 아니다.
+
+```
+render() {
+	return (
+		<div>
+			<div>{this.props.name}</div>
+			<div>{this.props.number}</div>
+		</div>
+	);
+}
+```
+- 위와 같은 함수가 있다고 할 때 props의 값을 참조할 때마다 this.props를 입력하는 것이 귀찮을 수 있다.
+- 이 때 비구조화 문법을 사용하면 다음과 같이 작성이 가능하다.
+```
+render() {
+	const { name, number } = this.props;
+	return (
+		<div>
+			<div>{name}</div>
+			<div>{number}</div>
+		</div>
+	);
+}
+```
+
