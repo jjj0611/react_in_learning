@@ -531,3 +531,171 @@ modules.exports = {
 - 설정을 마치고 webpack 개발 서버를 재시작해보자.
 - 이렇게 하면 상대 경로를 생략하고 utils.scss 파일을 불러와 사용할 수 있다.
 
+
+9.2.4 Sass 라이브러리
+
+- Sass의 장점 중 하나는 스타일 관련 라이브러리를 쉽게 불러와 사용할 수 있다는 것이다.
+- 여기에서는 include-media 믹스인 라이브러리와 open-color 변수 세트 라이브러리를 사용하여 초록색 버튼을 만들어보자.
+- include-media 믹스인 라이브러리는 반응형 디자인을 도와주며, open-color 라이브러리에는 여러 가지 색상이 들어 있어 쉽게 색상을 고를 수 있다.
+- 우선 두개의 라이브러리를 추가하자
+```
+yarn add include-media open-color
+```
+- 설치한 후에는 utils.css 파일을 불러와야 한다.
+
+utils.scss
+```
+@import '~open-color/open-color'
+@import '~include-media/dist/include-media';
+
+$breakpoints: (
+	small: 376px,
+	medium: 768px,
+	large: 1024px,
+	huge: 1200px
+);
+
+$size: 100px;
+
+@mixin place-at-center() {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+```
+- npm 또는 yarn으로 설치한 패키지 내부에 있는 파일을 불러올 때는 ~문자를 사용해서 node_modules에 접근할 수 있다.
+- $breakpoints 변수를 설정해주었는데, 여기에 있는 값은 추후 반응형 디자인을 위한 코드를 작성할 때 기준점으로 사용한다.
+
+
+9.2.5 버튼 생성
+
+- 방금 설치한 라이브러리를 활용하여 버튼을 만들어보자.
+- 버튼 컴포넌트는 src/components/Button 디렉토리에 저장하자.
+```
+Button.js
+Button.scss
+index.js
+```
+- 세가지 파일을 만들어보자.
+
+Button.js
+```
+import React, { Component } from 'react';
+import styles from './Button.scss';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
+
+const Button = ({children, ...rest}) => {
+    return (
+        <div className={cx('button')} {...rest}>
+            {children}
+        </div>
+    )
+}
+
+export default Button;
+```
+
+- CSS Module 형식으로 클래스를 설정했고, 함수형 컴포넌트로 구성했다.
+- props에는 children과 ...rest가 있다.
+- 여기에서 rest는 나중에 이 컴포넌트가 받을 모든 props를 명시한다.
+- 비구조화 할당 문법에서 ...foo 형식으로 입력하면 비구조화 할당을 할 때 따로 지정하지 않은 것들은 모두 foo에 담긴다.
+
+```
+const object = {
+	a: 1,
+	b: 2,
+	c: 3
+};
+
+const {a, ...foo} = object;
+
+console.log(a); // 1
+console.log(foo); // {b: 2, c: 3}
+```
+
+- 그리고 JSX을 렌더링하는 부분에 {...rest}를 넣어주었다.
+- 객체 안에 있는 모든 값을 해당 DOM/컴포넌트의 props로 지정한다는 의미이다.
+- 예를 들어 rest 객체 안에 onClick과 style이 들어있으면 <div onClick={onClick} style={style} 같은 형식으로 렌더린 된다.
+- 이렇게 하면 컴포넌트에 전달하는 props를 별도 작업 없이 그대로 DOM에 전달할 수 있다.
+
+- 스타일을 작성해보자.
+Button.scss
+```
+@import 'utils';
+
+.button {
+    background: $oc-green-7;
+    transition: all .2s ease-in;
+    display: inline-block;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    text-align: center;
+    color: white;
+    position: fixed;
+    font-size: 2rem;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+
+    @include place-at-center();
+
+    width: 1200px;
+
+    // 반응형 디자인
+    @include media("<huge") {
+        width: 1024px;
+    }
+
+    @include media("<large") {
+        width: 768px;
+    }
+
+    @include media("<medium") {
+        width: 90%;
+    }
+
+    // 마우스 상태에 따라 다른 효과 지정
+    &:hover {
+        background: $oc-green-6;
+    }
+    &:active {
+        margin-top: 3px;
+        background: $oc-green-8;
+    }
+}
+```
+
+- open-color를 적용하면 변수를 사용하여 여러 가지 색상을 쉽게 적용할 수 있다.
+- 변수 형식은 '$oc-색상 이름-명암'dlek.
+- 색상 종류는 https://yeun.github.io/open-color/를 참고하라.
+- include-media는 믹스인으로 구성된 라이브러리이다.
+- 사용할 때는 이전에 설정한 breakpoints에서 지정한 값들을 참조하여 @include media("<huge") {...} 형식으로 작성한다.
+- 이 코드에서는 기본 넓이를 1200px로 설정했고, 창 크기는 1200px 미만이면 1024px, 그것보다 더 작으면 768px로 설정, 페이지의 90% 크기로 설정했다.
+
+- 컴포넌트 관련 코드가 완성 됐으니 마지막으로 index.js를 만들어보자.
+- 컴포넌트 자바스크립트 파일과 스타일 파일을 보기 쉽게 정리하려고 Button 디렉토리를 따로 만들었다.
+- 이러면 나중에 컴포넌트 파일을 불러올 때 ./component/Button/Button 형식으로 불러와야 한다.
+- 이를 깔끔하게 작성하기 위해 index.js 파일을 만들어 컴포넌트를 불러온 후 바로 내보내도록 하자.
+
+index.js
+```
+import Button from './Button';
+export default Button;
+```
+- 이 코드를 한줄로도 작성이 가능하다.
+```
+export { default } from './Button';
+```
+- 두 코드 중 편한 것을 사용하면 된다.
+
+App.js
+```
+(...)
+import Button from './components/Button';
+
+(...)
+<Button>버튼</Button>
+```
+
