@@ -478,3 +478,56 @@ $size: 100px;
 - 또한 다른 개발자들이 사전에 만들어둔 라이브러리를 설치해서 사용할 수도 있다.
 - 반응형 디자인을 돕는 믹스인 라이브러리 include-media도 사용해보자.
 
+
+9.2.3 변수와 믹스인을 전역적으로 사용
+
+- 변수와 믹스인은 재사용을 위해 만든 것이다.
+- 우리는 CSS Module을 적용한 상태이므로 변수들과 믹스인을 파일마다 공유하지 않는다.
+- 이를 전역적으로 사용하도록 스타일 디렉터리를 만들어 전역적으로 쓰는 코드는 따로 분리하고,
+- 컴포넌트 스타일 파일에서 불러와 사용해보자.
+
+- src 디렉토리에 styles 디렉토리를 만들고, utils.scss파일도 만들어보자.
+- 이 파일에 변수와 믹스인을 잘라내서 넣어보자.
+
+utils.scss
+```
+$size: 100px;
+
+@mixin place-at-center() {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+```
+
+- App.scss에서는 다음과 같이 불러와서 사용할 수 있다.
+```
+@import './styles/utils';
+```
+- 컴포넌트를 저장하는 디렉토리가 좀 더 깊어지면 이 파일을 불러 올 때마다 상위 디렉토리로 가야하므로 '../../../styles...'와 같이 작성해야 할지도 모른다.
+- 파일을 기준으로 디렉토리 구조를 살피려니 비효율적이고, 헷갈릴 수 있다.
+- webpack에서 sass-loader를 설정할 때는 includePaths를 설정해서 경로를 간소화할 수 있다.
+- config/paths.js파일에 styles 경로를 넣어주어야 한다.
+
+config.paths.js
+```
+modules.exports = {
+	(...)
+	styles: resolveApp('src/styles')
+};
+```
+- 파일 아래쪽을 보면 경로들이 들어 있는 객체를 내보내는 코드가 있다.
+- 이 부분에 styles를 추가해보자.
+
+- webpack.config.dev.js 파일의 sass-loader 설정 부분도 수정해보자.
+```
+{
+  loader: require.resolve('sass-loader'),
+  options: {
+	includePaths: [paths.styles]
+  }
+}
+```
+- 설정을 마치고 webpack 개발 서버를 재시작해보자.
+- 이렇게 하면 상대 경로를 생략하고 utils.scss 파일을 불러와 사용할 수 있다.
+
