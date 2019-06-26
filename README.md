@@ -158,4 +158,68 @@ localIdentName: '[path][name]__[local]--[hash:base64:5]'
 ```
 - 첫번째 속성 modules는 CSS Module을 활성화시켜준다.
 - 두번째 속성 localIdentName은 CSS Module에서 고유하게 생성되는 클래스 네임 형식을 결정한다.
-	
+
+- 이 설정은 개발할 때 가동하는 webpack 개발 서버 전용이다.
+- 나중에 실제로 완성과 배포를 할 때는 webpack.config.prod.js 파일도 변경해야 한다.
+
+9.1.2 CSS Module 사용
+
+- App.css에 box 클래스를 만들어보자.
+App.css
+```
+.box {
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	border: 1px solid black;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+```
+- App.js에서 불러와 사용해보자.
+```
+import styles from './App.css';
+
+console.log(styles);
+
+class App extends Component {
+	render() {
+		return (
+			<div className={styles.box}
+			</div>
+		)
+	}
+}
+```
+- yarn start 명령어로 webpack 개발 서버를 실행해보자.
+- 그리고 콘솔창에서 styles 객체가 어떤 객체인지 확인해보자.
+- 개발자 도구를 살펴 보명 클래스명이 "src-App__box--mjrNr"로 되어 있다.
+- 즉 클래스가 중보고디는 충돌이 일어나지 않는다는 ㄸ스이다.
+
+9.1.2.1 클래스가 여러 개일 때
+
+- 클래스 네임이 여러개일 때는 style.box도 결국 문자열 형태의 값이기 때문에 사이에 공백을 두고 합치면 된다.
+- blue 클래스를 추가해보자.
+```
+.blue {
+	background: blue;
+}
+```
+- 두 가지 클래스를 사용할 때는 다음과 같이 설정한다.
+```
+(...)
+<div classNAme={[styles.box, styles.blue].join(' ')}>
+(...)
+```
+- 이것보다 더 편한 방법이 있다. 바로 classnames 라이브러리를 사용하는 것이다.
+```
+$ yarn add classnames
+```
+- 해당 명령어로 이 라이브러리를 설치하고 나면 다음과 같이 적용이 가능하다.
+```
+<div className={classNames(styles.box, styles.blue)}>
+```
+- classNames(클래스 이름, 다른 클래스 이름) 방식으로 호출하면 자동으로 사이에 공백을 넣어준다.
+- classNames의 bind 기능을 사용하면 좀 더 편하다. 클래스 네임을 입력할 때 styles를 생략할 수 있다.
