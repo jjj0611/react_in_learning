@@ -380,3 +380,51 @@ App.scss
 }
 ```
 - .blue 클래스도 현재 선택자 참조 기능을 사용하여 .box 안에 넣어 주었다.
+
+9.2.2.2 감싸인 구조
+
+- Sass를 사용하면 감싸인(nested) 구조로 코드를 보기 좋게 입력할 수 있다.
+- 코드를 감싸서 입력하면 DOM 트리 구조대로 클래스를 작성할 수 있고, 특정 클래스가 특정 클래스 내부에 있을 때만 적용하기 때문에 가독성과 편리함이 증가한다.
+- App 컴포넌트를 조금 수정하자
+```
+render() {
+	const isBlue = true;
+	
+	return (
+		<div className={cx('box', {blue: isBlue})}>
+			<div className={cs('box-inside')}/>
+		</div>
+	);
+}
+```
+- box 내부에 box-inside 클래스를 가진 div 요소를 만들었다.
+- box-inside 클래스를 만들고, 이 클래스가 box 내부에 있을 때만 작동하기를 원한다면, CSS는 다음과 같이 작성한다.
+```
+.box .box-inside {
+	/* ... */
+}
+```
+- Sass 이용시에는 다음과 같이 작성한다.
+```
+.box {
+	.box-inside {
+		/* ... */
+	}
+}
+```
+
+- 이것을 이용해 box-inside 클래스를 스타일링 해보자.
+App.scsss
+```
+.box {
+(...)
+
+	.box-inside {
+		background: black;
+		width: 50px;
+		height: 50px;
+	}
+}
+```
+- 이렇게 하면 App 컴포넌트의 코드를 같이 읽지 않고도 box-inside 클래스가 box 클래스 내부에 있다는 것을 알 수 있다.
+
