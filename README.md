@@ -104,7 +104,7 @@ create-react-app styling-react
 {
 	box: 'src-App__box--mjrNr'
 }
-```
+``
 - 그리고 적용할 때는 className={styles.box} 방식으로 사용한다.
 
 
@@ -323,4 +323,60 @@ $ yarn add node-sass sass-loader
 - webpack 개발 서버를 종료하고 시작해보자. Sass가 제공하는 몇 가지 기능을 사용해보자.
 
 
+9.2.2 Sass 사용
 
+9.2.2.1 현재 선택자 참조
+
+- 특정 클래스에 마우스를 올릴 때나 클릭할 때 다른 스타일을 적용하려면 다음과 같이 CSS 코드를 작성해야 한다.
+```
+.box:hover {
+	background: red;
+}
+
+.box:active {
+	background: yellow;
+}
+```
+
+- 같은 내용을 Sass의 현재 선택자 참조 기능으로 작성할 수 있다. & 문자를 사용하여 다음과 같이 작성한다.
+```
+.box {
+	/* 스타일 설정 */
+	&:hover {
+		background: red;
+	}
+	&:active {
+		background: yellow;
+	}
+}
+```
+- 이런식으로 감싸인 구조로 CSS를 작성할 수 있기 때문에 가독성이 훨씬 높다.
+- 바로 적용해보자. 기존 App.css를 App.scss로 파일 이름을 변경해보자.
+- 또한 App.js 파일에서 import 할 때도 변경해보자.
+
+App.scss
+```
+.box {
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	border: 1px solid black;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	&.blue {
+		background: blue;
+	}
+	
+	&:hover {
+		background: yellow;
+	}
+	
+	&:active {
+		background: red;
+	}
+}
+```
+- .blue 클래스도 현재 선택자 참조 기능을 사용하여 .box 안에 넣어 주었다.
