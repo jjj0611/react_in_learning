@@ -446,3 +446,35 @@ $size: 100px;
 }
 ```
 
+
+9.2.2.4 믹스인 사용
+
+- 자주 사용하는 값은 변수에 넣고, 자주 사용하는 구문은 믹스인으로 다시 이용할 수 있다.
+- 이번에는 place-at-center라는 믹스인을 만들어서 요소를 화면 가운데에 위치시키는 CSS 구문을 호출해보자.
+
+App.scss
+```
+$size: 100px;
+
+@mixin place-at-center() {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.box {
+	display: inline-block;
+	width: $size;
+	height: $size;
+	border: 1px solid black;
+	position: fixed;
+
+	@include place-at-center();
+}
+(...)
+```
+
+- 이 외에도 믹스인은 다양한 방식으로 활용할 수 있다.
+- 또한 다른 개발자들이 사전에 만들어둔 라이브러리를 설치해서 사용할 수도 있다.
+- 반응형 디자인을 돕는 믹스인 라이브러리 include-media도 사용해보자.
+
