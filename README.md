@@ -104,6 +104,7 @@ create-react-app styling-react
 {
 	box: 'src-App__box--mjrNr'
 }
+```
 - 그리고 적용할 때는 className={styles.box} 방식으로 사용한다.
 
 
@@ -261,4 +262,65 @@ render() {
 - 이 방식은 프로젝트를 작업하는데 큰 문제가 없지만, 일부 사람들은 일반 CSS 자체에 결함이 조금 있다고 생각할 수 있다.
 - CSS 코드는 수월하게 작성할 수 있지만, 프로젝트를 진행하다보면 코드가 복잡해져 가독성이 쉽게 떨어진다.
 - 이런 결함은 Sass, LESS, Stylus 등 CSS 전처리기 도구를 사용하여 해결할 수 있다.
+
+9.2 Sass
+
+- Sass는 Syntactically awesome style sheets의 약어로 문법적으로 매우 멋진 스타일 시트를 의미한다.
+- Sass로는 CSS에서 사용할 수 있는 문법을 확장하여 중복되는 코드를 줄여 더욱 보기 좋게 작성할 수 있다.
+
+
+9.2.1 프로젝트에 Sass 적용
+
+- 리액트 프로젝트에 Sass를 적용하려면 두 가지 패키지(node-sass, sass-loader)를 설치해야 한다.
+```
+$ yarn add node-sass sass-loader
+```
+- sass-loader는 webpack에서 Sass 파일을 읽어 오고, node-sass는 Sass로 작성된 코드들을 CSS로 변환한다.
+- sass-loader를 적용하려면 webpack 환경설정에서 css-loader에 설정한 내용들을 동일하게 복사하고, 설정 아래 쪽에 sass-loader 부분을 추가해보자.
+```
+{
+  test: /\.scss$/,
+  use : [
+	require.resolve('style-loader'),
+	{
+	  loader: require.resolve('css-loader'),
+	  options: {
+		importLoaders: 1,
+		modules: true,
+		localIndentName: '[path][name]__[local]--[hash:base64:5]',
+	  },
+	},
+	{
+	  loader: require.resolve('postcss-loader'),
+	  options: {
+		ident: 'postcss',
+		plugins: () => [
+			require('postcss-flexbugs-fixes'),
+			autoprefixer({
+				browsers: [
+					'>1%',
+					'last 4 versions',
+					'Firefox ESR',
+					'not ie < 9',
+				],
+				flexbox: 'no-2009',
+			}),
+		],
+	  },
+	},
+	{
+	  loader: require.resolve('sass-loader'),
+	  options: {
+		// 추후 입력
+	  },
+	},
+  ],
+},
+(...)
+```
+- 현재는 CSS Module을 적용한 css-loader 설정을 복사해서 썼기 때문에 Sass를 사용할 때도 CSS Module이 적용되어 있다.
+- Css Module을 사용하지 않으려면 modules 값과 localIndentName을 지워야 한다.
+- webpack 개발 서버를 종료하고 시작해보자. Sass가 제공하는 몇 가지 기능을 사용해보자.
+
+
 
