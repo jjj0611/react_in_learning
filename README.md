@@ -223,3 +223,42 @@ $ yarn add classnames
 ```
 - classNames(클래스 이름, 다른 클래스 이름) 방식으로 호출하면 자동으로 사이에 공백을 넣어준다.
 - classNames의 bind 기능을 사용하면 좀 더 편하다. 클래스 네임을 입력할 때 styles를 생략할 수 있다.
+
+9.1.2.2 classNames 사용 예제
+```
+classNames('foo', 'bar'); // => 'foo bar'
+classNames('foo', { bar: true}); // => 'foo bar'
+classNames({'foo-bar': true}); // => 'foo-bar'
+classNames({'foo-bar': false}); // => ''
+classNames({ foo : true }, { bar : true } ); // => 'foo bar'
+classNames({foo:true, bar: true}); // => 'foo bar'
+classNames(['foo', 'bar']); // => 'foo bar'
+
+// 형식을 동시에 여러 개 받아 올 수도 있다.
+classNames('foo', { bar: true, duck: false }, 'baz', { quux : true }); // => 'foo bar baz quux'
+
+// false, null, 0, undefined는 무시된다.
+classNames(null, false, 'bar', undefined, 0, 1, { baz: null }, ''); // => 'bar 1'
+```
+- 객체 형식으로 사용한다면 조건부 스타일링을 할 떄 매우 편리하다.
+- 다음 코드에서는 isBlue 값이 true일 때만 blue 클래스를 적용한다.
+```
+(...)
+render() {
+	const isBlue = true;
+	
+	return (
+		<div className={cx('box', { blue : isBlue })}>
+
+		</div>
+	)
+}
+```
+- isBlue 값에 따라 blue가 적용된다.
+- 지금은 이 값을 직접 설정했지만, 이 값을 props로 받아 와 사용하면 손쉽게 props에 따라 동적인 스타일을 줄 수 있다.
+- CSS Module은 고유한 클래스네임을 만들어 스코프를 제한한다.
+- classnames 라이브러리를 사용하면 이를 더욱 편하게 지정할 수 있다.
+- 이 방식은 프로젝트를 작업하는데 큰 문제가 없지만, 일부 사람들은 일반 CSS 자체에 결함이 조금 있다고 생각할 수 있다.
+- CSS 코드는 수월하게 작성할 수 있지만, 프로젝트를 진행하다보면 코드가 복잡해져 가독성이 쉽게 떨어진다.
+- 이런 결함은 Sass, LESS, Stylus 등 CSS 전처리기 도구를 사용하여 해결할 수 있다.
+
