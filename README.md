@@ -428,3 +428,21 @@ App.scsss
 ```
 - 이렇게 하면 App 컴포넌트의 코드를 같이 읽지 않고도 box-inside 클래스가 box 클래스 내부에 있다는 것을 알 수 있다.
 
+
+9.2.2.3 변수 사용
+
+- Sass에서 자주 사용하는 값을 변수에 넣을 수 있다.
+- box의 width와 height에 설정된 100px를 $size 변수 안에 넣어서 사용해보자.
+
+App.scss
+```
+$size: 100px;
+
+.box {
+	display: inline-block;
+	width: $size;
+	height: $size;
+	(...)
+}
+```
+

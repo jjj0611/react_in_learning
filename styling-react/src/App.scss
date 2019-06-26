@@ -1,7 +1,9 @@
+$size: 100px;
+
 .box {
   display: inline-block;
-  width: 100px;
-  height: 100px;
+  width: $size;
+  height: $size;
   border: 1px solid black;
   position: fixed;
   top: 50%;
