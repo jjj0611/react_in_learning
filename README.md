@@ -17,8 +17,13 @@
 
 - yarn eject 명령어 실행
 
-10.1.2.2. Sass 관련 모듈과 classnames 설치
+10.1.2.2 Sass 관련 모듈과 classnames 설치
 
 - yarn add sass-loader node-sass classnames
 
+10.1.2.3 webpack 설정 파일 수정
+
+- css-loader 설정을 복사하여 아래쪽에 붙여넣고, 확장자는 scss로 변경한다.
+- 로더 목록 아래 쪽에는 sass-loader를 설정한다.
+- 그리고 options에서는 paths.styles를 includePaths로 설정한다.
 
