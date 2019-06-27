@@ -104,7 +104,7 @@ create-react-app styling-react
 {
 	box: 'src-App__box--mjrNr'
 }
-``
+```
 - 그리고 적용할 때는 className={styles.box} 방식으로 사용한다.
 
 
