@@ -18,3 +18,5 @@ const PageTemplate: React.SFC<IPageTemplateProps> = ({children}) => {
         </div>
     )
 }
+
+export default PageTemplate;
