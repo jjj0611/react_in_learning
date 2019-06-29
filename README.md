@@ -316,3 +316,116 @@ return (
 ```
 
 
+10.2.4 TodoItem 컴포넌트 생성
+
+- 일정 벙보를 렌더링하는 TodoItem 컴포넌트를 만들어보자.
+- 이 컴포넌트는 class 문법을 사용해서 만들어보자.
+- 성능 최적화를 위해 shouldComponentUpdate 라이프사이클 메서드를 사용해야 하기 때문이다.
+
+- TodoItem 컴포넌트는 다음 값들을 props로 받아온다. done, children, onToggle, onRemove
+- done 값은 해당 일정을 완료 했는지 완료하지 않았는지 여부를 가리킨다.
+- children 값은 일정 정보 내용을 나타낸다.
+- onToggle은 일정 완료 상태를 껐다 켰다 하는 함수이다.
+- onRemove는 해당 일정을 제거하는 함수이다.
+
+TodoItem.js
+```
+import React, { Component } from 'react';
+import styles from './TodoItem.scss';
+import classNames from 'classnames/bind';
+
+const cs = classNames.bind('styles');
+
+class TodoItem extends Component {
+	render() {
+		const {done, children, onToggle, onRemove } = this.props;
+		/*
+		앞 코드에서는 비구조화 할당을 이용하여 this.props 안에 있는
+		done, children, onToggle, onRemove 레퍼런스를 만들어주었다.
+		*/
+	
+		return (
+			<div className={cx('todo-item')} onClick={onToggle}>
+				<input className={cx('tick)} type="checkbox" checked={done} readOnly />
+				<div className={cx('text', {done})}>{children}</div>
+				<div classNAme={cx('delete')} onClick={onRemove}>[지우기]</div>
+			</div>
+		);
+	}
+}
+
+export default TodoItem;
+```
+
+- props를 사용하는 과정에서 비구조화 할당 문법으로 props 안에 있는 값들의 레퍼런스를 만들어 주었다.
+- 이렇게 하면 props를 사용할 떄 this.props.onToggle, this.props.done 처럼 앞에 this.props를 붙이지 않아도 된다.
+- 때문에 앞으로 class문법으로 컴포넌트를 만들면서 props를 사용하면 이런식으로 비구조화 할당을 하자.
+- 이렇게 하면 렌더링 함수 위쪽에서 이 컴포넌트가 어떤 props를 사용하는지 한눈에 볼 수 있으니 매우 유용하다.
+
+- 최상위 div 요소에는 onClick 이벤트에 onToggle 함수를 연결시켜주었다.
+- 그 내부 input을 렌더링 할 때는 체크박스를 렌더링해야 하므로 type을 checkbox로 지정했다.
+- 체크 여부를 기리키는 checked 값을 done으로 지정했고, 뒤에 readOnly props를 넣었다.
+- props 설정시 = 포시가 생략되어 있으면 = { true } 와 같다.
+- readOnly를 활성화한 이유는 체크박스 활성화 비활성화를 input의 이벤트로 관리하는게 아니라 상위 요소인 div에서 관리하기 때문이다.
+- 체크박스는 장식용에 불과하고 체크박스를 클릭한다는 것은 그 상위 요소를 클리하는 것과 같으므로 따로 처리해야하는 작업은 없다.
+
+- input 요소 아래 쪽 div 요소에는 조건부 className이 설정되어 있다. done 값이 참이라면 해당 요소에 done 클래스를 적용한다.
+- text 클래스와 done클래스가 함께 있으면 중간 선을 긋도록 할 것이다.
+
+- 제거 div 요소에는 클릭했을 떄 onRemove 를 호출하도록 설정했다.
+- 여기서는 상위 요소에도 onClick이 있고, 하위 요소에도 onClick이 있는데, 이 경우 실제로 지우기 버튼을 누르면 onRemove -> onToggle 순으로 함수가 실행된다.
+- 이 부분은 추후 수정하자.
+
+- 컴포넌트 스타일링
+
+TodoItem.scss
+```
+@import 'utils';
+
+.todo-item {
+	padding: 1rem;
+	display: flex;
+	align-item: center;
+	cursor: pointer;
+	.tick {
+		margin-right: 1rem;
+	}
+	.text {
+		flex: 1;
+		word-break: break-all;
+		&.done {
+			text-decoration: lint-through;
+		}
+	}
+	.delete {
+		margin-left: 1rem;
+		color: $oc-red-7;
+		font-size: 0.8rem;
+		&:hover {
+			color: $oc-red-5;
+			text-decoration: underline;
+		}
+	}
+	&:nth-chlid(odd) {
+		// 홀수번째 요소에는 회색 배경
+		background: $oc-gray-0;
+	}
+	&:hover {
+		background: $oc-gray-1;
+	}
+}
+
+.todo-item + .todo-item {
+	// 컴포넌트 사이에 위쪽 테두리를 설정한다.
+	border-top: 1px solid $oc-gray-1;
+}
+```
+
+- 스타일링 이후 인덱스 파일을 만들어보자.
+index.tsx
+```
+export { default } from './TodoItem';
+```
+- 이 컴포넌트는 App에 렌더링하지 않고, 앞으로 만들 TodoList 컴포넌트 내부에 렌더링한다.
+
+
