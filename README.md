@@ -119,7 +119,7 @@ return (
 ```
 - src/components 디렉토리에 PageTemplate 디렉토리를 만들어보자.
 - 디렉토리 내부에 PageTemplate.js 파일을 생성하여 컴포넌트의 JSX를 작성한다.
-PageTemplate.tsx
+PageTemplate.js
 ```
 import React from 'react';
 import styles from './PageTemplate.scss';
@@ -202,4 +202,117 @@ class App extends Component {
 
 export default App;
 ```
+
+
+10.2.3 TodoInput 컴포넌트 생성
+
+- 일정을 입력할 수 있는 TodoInput 컴포넌트를 만들어보자.
+
+TodoInput.js
+```
+import React from 'react';
+import styles from './TodoInput.scss';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
+
+// Input과 버튼이 함께 있는 컴포넌트이다.
+/*
+value: input 값
+onChange: input 변경 이벤트
+onInsert: 추가 버튼 클릭 이벤트
+*/
+
+const TodoInput = ({value, onChange, onInsert}) => {
+	
+	// Enter 키가 눌리면 onInsert를 실행한다.
+	const handleKeyPress = (e) => {
+		if ( e.key === 'Enter' ) {
+			onInsert();
+		}
+	}
+	
+	return (
+		<div className={cx('todo-input')}>
+			<input onChange={onChange} value={value} onKeyPress={handleKeyPress} />
+			<div className={cx('add-button')} onClick={onInsert}>추가</div>
+		</div>
+	);
+};
+
+export default TodoInput;
+```
+- 이 컴포넌트는 props를 세 개 받는다. value는 input 값으로 설정된다.
+- onChange는 input 내용이 수정될 때 사용하는 이벤트이다.
+- onInsert는 추가 버튼을 눌렀을 때 실행하는 이벤트이다.
+- onChange와 value 값은 input의 props로 설정하고, onInsert는 추가 버튼의 onClick 이벤트로 설정한다.
+- Enter를 누를 때도 추가버튼을 누른 것과 동일한 효과를 준다.
+- 내부적으로 handleKeyPress 메서드를 만들어 이를 input의 onKeyPress 이벤트로 설정한다.
+
+- 다음으로는 스타일링을 해보자.
+TodoInput.scss
+```
+@import 'utils'; // open-color를 사용해야 하기 때문에 불러왔다.
+
+.todo-input {
+	border-top: 1px solid $oc-gray-2;
+	border-bottom: 1px solid $oc-gray-2;
+	// flex를 사용하여 손쉽게 레이아웃을 설정한다.
+	display: flex:
+	padding: 1rem;
+	input {
+		// input의 기본 스타일을 지우고 새 스타일을 정의한다.
+		flex: 1; // 부모 요소에서 add-button을 제외한 나머지 공간을 차지한다.
+		font-size: 1.1rem;
+		outline: none;
+		border: none;
+		background: transparent;
+		border-bottom: 1px solid $oc-gray-4;
+		&:focus {
+			border-bottom: 1px solid $oc-cyan-6;
+		}
+	}
+
+	.add-butto {
+		width: 5rem;
+		height: 2rem;
+		margin-left: 1rem;
+		border: 1px solid $oc-green-7;
+		color: $oc-green-7;
+		font-weight: 500;
+		font-size: 1.1rem;
+		displya: flex;
+		// 내용을 가운데 정렬 시킨다.
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		&:hover {
+			background: $oc-green-7;
+			color: white;
+		}
+		&:active {
+			background: $oc-green-8;
+		}
+	}
+}
+
+- 컴포넌트 인덱스 파일을 만들어보자.
+index.js
+```
+export { default } from './TodoInput';
+```
+
+- TodoInput 컴포넌트를 App에서 불러와PageTemplate 내부에 렌더링 해보자.
+```
+(...)
+import TodoInput from './TodoInput';
+(...)
+return (
+	<PageTemplate>
+		<TodoInput />
+	</PageTemplate>
+)
+(...)
+```
+
 
