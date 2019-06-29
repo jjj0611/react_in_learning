@@ -5,8 +5,8 @@ import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 export interface ITodoInputProps {
-    value: string,
-    onChange: (e: React.SyntheticEvent<Element, Event>) => void,
+    value: string
+    onChange: (e: React.SyntheticEvent<Element, Event>) => void
     onInsert: () => void
 }
 
