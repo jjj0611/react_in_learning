@@ -1,12 +1,33 @@
 import * as React from 'react';
 import TodoItem from '../TodoItem';
 
-class TodoList extends React.Component {
+export interface ITodoListData {
+    id: number,
+    text: string,
+    done: boolean
+}
+
+export interface ITodoListProps {
+    todos: Array<ITodoListData>
+}
+
+class TodoList extends React.Component<ITodoListProps, {}> {
     render() {
+        const { todos } = this.props;
+        const todoList = todos.map(
+            todo => (
+                <TodoItem
+                    key={todo.id}
+                    done={todo.done}>
+                        {todo.text}
+                </TodoItem>
+                    
+            )
+        );
+
         return (
             <div>
-                <TodoItem done>리액트 공부하기</TodoItem>
-                <TodoItem>컴포넌트 스타일링 해보기</TodoItem>
+                {todoList}
             </div>
         )
     }
