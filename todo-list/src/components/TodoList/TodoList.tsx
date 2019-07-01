@@ -9,16 +9,18 @@ export interface ITodoListData {
 
 export interface ITodoListProps {
     todos: Array<ITodoListData>
+    onToggle: (id: number) => void
 }
 
 class TodoList extends React.Component<ITodoListProps, {}> {
     render() {
-        const { todos } = this.props;
+        const { todos, onToggle } = this.props;
         const todoList = todos.map(
             todo => (
                 <TodoItem
                     key={todo.id}
-                    done={todo.done}>
+                    done={todo.done}
+                    onToggle={() => onToggle(todo.id)}>
                         {todo.text}
                 </TodoItem>
                     
