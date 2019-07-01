@@ -9,7 +9,11 @@ export interface IAppState {
 
 class App extends Component<{}, IAppState> {
     state = {
-        input: ''
+        input: '',
+        todos: [
+            { id: 0, text: '리액트 공부하기', done: true},
+            { id: 1, text: '컴포넌트 스타일링 해보기', done: false}
+        ]
     }
 
     handleChange = (e:React.SyntheticEvent) => {
@@ -17,16 +21,16 @@ class App extends Component<{}, IAppState> {
         this.setState({
             input: value
         })
-
     }
 
 
     render() {
-        const {input} = this.state;
+        const {input, todos} = this.state;
         const {handleChange} = this;
         return (
             <PageTemplate>
                 <TodoInput onChange={handleChange} value={input} />
+                <TodoList todos={todos} />
             </PageTemplate>
         );
     }
