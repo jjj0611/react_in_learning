@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PageTemplate from './PageTemplate';
 import TodoInput from './TodoInput';
+import { ITodoListData } from './TodoList/TodoList'
 
 export interface IAppState {
     input: string
+    todos: Array<ITodoListData>
 }
 
 
@@ -16,6 +18,11 @@ class App extends Component<{}, IAppState> {
         ]
     }
 
+    id = 1
+    getId = () => {
+        return ++this.id;
+    }
+
     handleChange = (e:React.SyntheticEvent) => {
         const { value } = e.target as HTMLInputElement;
         this.setState({
@@ -23,13 +30,28 @@ class App extends Component<{}, IAppState> {
         })
     }
 
+    handleInsert = () => {
+        const { todos, input } = this.state;
+
+        const newTodo = {
+            text: input,
+            done: false,
+            id: this.getId()
+        };
+
+        this.setState({
+            todos: [...todos, newTodo],
+            input: ''
+        })
+    }
+
 
     render() {
         const {input, todos} = this.state;
-        const {handleChange} = this;
+        const {handleChange, handleInsert} = this;
         return (
             <PageTemplate>
-                <TodoInput onChange={handleChange} value={input} />
+                <TodoInput onChange={handleChange} onInsert={handleInsert} value={input} />
                 <TodoList todos={todos} />
             </PageTemplate>
         );
