@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styles from './TodoItem.module.scss';
 import classNames from 'classnames/bind';
 
@@ -18,9 +18,14 @@ class TodoItem extends React.Component<ITodoItemProps, {}> {
             <div className={cx('todo-item')} onClick={onToggle}>
                 <input className={cx('tick')} type="checkbox" checked={done} readOnly />
                 <div className={cx('text', {done})}>{children}</div>
-                <div className={cx('delete')} onClick={onRemove}>[지우기]</div>
+                <div className={cx('delete')} onClick={(e:React.SyntheticEvent) => {
+                    onRemove();
+                    e.stopPropagation();
+                    }
+                }>[지우기]</div>
             </div>
         )
     }
 }
 
+export default TodoItem;
