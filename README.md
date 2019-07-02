@@ -429,3 +429,396 @@ export { default } from './TodoItem';
 - 이 컴포넌트는 App에 렌더링하지 않고, 앞으로 만들 TodoList 컴포넌트 내부에 렌더링한다.
 
 
+10.2.5 TodoList 컴포넌트 생성
+
+- TodoList 컴포넌트는 데이터 배열을 컴포넌트 배열로 변환하여 렌더링하는 역할만 한다.
+- 따로 스타일링 할 것은 없고, 데이터 배열을 변환하는 과정을 구현하기 전에 먼저 TodoItem 컴포넌트를 불러와 임시 데이터를 넣어서 두 TodoItem 컴포넌트를 렌더링해보자.
+
+TodoList.js
+```
+import React, { Component } from 'react';
+import TodoItem from '../TodoItem';
+
+class TodoList extends Component {
+	render() {
+		return (
+			<div>
+				<TodoItem done>리액트 공부하기</TodoItem>
+				<TodoItem>컴포넌트 스타일링 해보기</TodoItem>
+			</div>
+		);
+	}
+}
+
+export default TodoList;
+```
+
+- 컴포넌트 인덱스 파일을 만들어보자.
+
+index.js
+```
+export { default } from './TodoList';
+```
+
+- App에 렌더링 해보자.
+App.js
+```
+import React, { Component } from 'react';
+import PageTemplate from './PageTemplate';
+import TodoInput from './TodoInput';
+import TodoList from './TodoList';
+
+class App extends Component {
+	render() {
+		return (
+			<PageTemplate>
+				<TodoInput />
+				<TodoList />
+			</PageTemplate>
+		);
+	}
+}
+
+export default App;
+```
+
+- 이렇게 하면 인터페이스 작업은 완료 되었다.
+
+
+10.3 상태 관리
+
+- 실제로 프로젝트를 작동시키기 위해서는 뷰에서 보여줄 상태를 관리해야 한다.
+- 상태 관리는 주로 기능별로 상태가 필요한 컴포넌트들을 감싸는 상위 컴포넌트에서 하는 것이 더 편리하다.
+- 지금 하는 프로젝트는 App에서 하면 된다.
+
+좋지 않은 예
+- 데이터 배열의 상태를 TodoList 컴포넌트에서 정의하고, TodoInput의 상태를 그 내부에서 정의했다고 가정해보자.
+- 새 데이터를 TodoList에 넣으려면 로직을 어떻게 작성해야 할까?
+```
+1) TodoList 컴포넌트에 데이터 생성 메서드 만들기
+2) App에서 TodoList에 ref 달기
+3) TodoInput에 ref가 달린 TodoList의 데이터 생성 메서드를 props로 전달하기
+4) TOdoInput의 상태를 전달받은 함수에 파라미터로 넣기
+```
+
+좋은 예
+- 위 방식보다는 데이터가 필요한 컴포넌트들의 상위 컴포넌트인 App에서 하는 것이 좋다.
+- App의 state에서 input 값과 데이터 배열을 정의하고, 이를 변화시키는 메서드들도 정의한다.
+- state 값과 메서드를 props로 하위 컴포넌트에 전달해서 사용하는 것이 바람직한 흐름이다.
+
+
+10.3.1. 텍스트 입력 관련 상태 관리
+
+- TodoInput 컴포넌트가 사용할 input 상태부터 관리해보자.
+- App.js 파일의 state에 input 값을 정의하고, 이 input 변경 이벤트를 처리할 handleChange  메서드를 만들자.
+- 그리고 이것들을 TodoInput 컴포넌트의 props로 전달하자.
+
+App.js
+```
+(...)
+
+Class App extends Component {
+	state = {
+		input: ''
+	}
+
+	handleChange = (e) => {
+		const { value } = e.target;
+		this.setState({
+			input: value
+		});
+	}
+
+	render() {
+		const { input } = this.state;
+		const {
+			handleChange
+		} = this;
+
+		return (
+			<PageTemplate>
+				<TodoInput onChange={handleChange} value={input} />
+				<TodoList />
+			</PageTemplate>
+		);
+	}
+}
+
+export default App;
+```
+- render 함수에서 state와 메서드를 사용할 때도 비구조화 할당을 이용하여 레퍼런스를 미리 만들어두었다.
+- 이렇게 하면 값을 사용할 때마다 this.props 또는 this를 참조하지 않아도 된다.
+
+
+10.3.2 초기 일정 데이터 정의 및 렌더링
+
+- 초기 일정 데이터를 정의하고 이를 렌더링해보자.
+- state에 todos라는 객체 배열을 만들자.
+- 배열 안에는 기본값으로 두 객체를 넣는데, 객체 안에는 id, text, done 값이 들어있다.
+- id 값은 각 데이터에 고유값을 부여하여 나중에 컴포넌트로 구성된 배열을 렌더링할 대 key로 사용한다.
+- 데이터를 변경시에도 이 값을 참조하여 데이터를 찾아 변경한다.
+- text는 일정 정보, done은 체크 여부를 나타낸다.
+- todos를 정의한 후 이를 TodoList의 props로 전달한다.
+
+App.js
+```
+(...)
+
+state = {
+	input: '', // input 값
+	// 일정 데이터 초깃값
+	todos: [
+		{ id: 0, text: '리액트 공부하기', done: true },
+		{ id: 1, text: '컴포넌트 스타일링 해보기', done: false }
+	]
+}
+
+
+(...)
+return (
+(...)
+	<TodoList todos={todos} />
+(...)
+```
+- TodoList 컴포넌트를 열고, todos 배열을 map 함수를 사용하여 TodoItem으로 구성된 컴포넌트 배열로 변환하라.
+
+TodoList.js
+```
+(...)
+render() {
+	const { todos } = this.props;
+	const { todoList } = todos.map(
+		todo => (
+			<TodoItem key={todo.id} done={todo.done}>{todo.text}</TodoItem>
+		)
+	);
+
+	return (
+		<div>
+			{ todoList }
+		</div>
+	);
+}
+(...)
+```
+- TodoItem 컴포넌트에 하나씩 데이터를 직접 넣었지만, 이제는 todos 배열에 따라서 렌더링을 하고 있다. 데이터가 가변해도 괜찮다.
+
+
+10.3.3 데이터 추가
+
+- input에 적은 일정정보를 todos 배열에 추가하는 기능을 구현해보자.
+- App 컴포넌트에 handleInsert 메서드를 정의하자.
+- 이 메서드는 새 데이터 객체를 만든 후 setState를 사용하여 todos 안에 넣어준다.
+- 이 과정에서 전개 연산자(...)를 사용한다.
+- 객체 내부의 id 값은 추가할 때마다 1씩 더해진다.
+- 이떄 사용할 id 값은 렌더링 되는 정보가 아니므로 굳이 state 내부에 넣을 필요 없이 컴포넌트의 멤버 변수로 선언한다.
+- 내부 메서드 getId를 만들어서 이것을 호출하면 기존 값에 1을 더한 후 이를 반환하도록 설정한다.
+- 메서드를 만들고 나면 input의 props로 전달하라.
+
+App.js
+```
+(...)
+id = 1
+getId = () => {
+	return ++this.id // 현재 값에서 1을 더한 값을 반환
+}
+
+(...)
+// 새 데이터 추가
+handleInsert = () => {
+	const { todos, input }  = this.state;
+
+	const newTodo = {
+		text: input,
+		done: false,
+		id: this.getId()
+	};
+};
+
+// 배열 안에 새 데이터를 집어 넣는다.
+this.setState({
+	todos: [...todos, newTodo],
+	input: ''
+})
+
+render() {
+	const { input, todos } = this.state;
+	const {
+		handleChange,
+		handleInsert
+	} = this;
+
+	return (
+		<PageTemplate>
+			<TodoInput onChange={handleChange} onInsert={handleInsert} value={input} />
+			<TodoList todos={todos} />
+		</PageTemplate>
+	);
+}
+(...)
+```
+
+10.3.4 데이터 수정
+
+- 데이터를 수정하는 기능을 구현해보자.
+- 데이터 수정은 TodoItem을 클릭했을 때 체크박스를 활성화 및 비활성화 하는 과정에서 일어난다.
+- 배열 안의 데이터를 수정하려면 id로 원하는 데이터를 찾아, slice와 전개 연산자를 사용해서 새 배열을 만드는 방식으로 업데이트 해야 한다.
+- App 컴포넌트에서 handleToggle 메서드를 정의하여 이를 TodoList의 onToggle props로 전달하라.
+
+App.js
+```
+(...)
+
+// to do 아이템 토글하기
+handleToggle = (id) => {
+	// id로 배열의 인덱스를 찾는다.
+	const { todos } = this.state;
+	const index = todos.findIndex( todo => todo.id === id);
+
+	// 찾은 데이터의 done 값을 반전시킨다.
+	const toggled = {
+		...todos[index],
+		done: !todos[index].done
+	};
+
+	// slice를 사용하여 우리가 찾은 index 전후의 데이터들을 복사한다.
+	// 그리고 그 사이에는 변경된 to do 객체를 넣어준다.
+	this.setState({
+		todos: [
+			...todos.slice(0, index),
+			toggled,
+			...todos.slice(index + 1, todos.length)
+		]
+	});
+
+	render() {
+		const { input, todos } = this.state;
+		const { handleChange, handleInsert, handleToggle } = this;
+		return (
+			<PageTemplate>
+				<TodoInput onChange={handleChange} onInsert={handleInsert} value={input} />
+				<TodoList todos={todos} onToggle={handleToggle} />
+			</PageTemplate>
+		);
+	}
+(...)
+```
+
+- App 컴포넌트를 수정한 후에는 TodoList 컴포넌트도 수정해야 한다.
+- props로 받은 onToggle 메서드를 실행할 때 index를 파라미터로 넣어주어야 하기 때문이다.
+- 배열을 컴포넌트 배열로 변환하는 과정에서 onToggle 부분에 화살표 함수 문법으로 새로운 함수를 선언하여 전달하자.
+TodoList.js
+```
+(...)
+render() {
+	const { todos, onToggle } = this.props;
+	const todoList = todos.map(
+		todo => (
+			<TodoItem
+				key={todo.id}
+				done={todo.done}
+				onToggle={() => onToggle(todo.id)}>
+			{todo.text}
+			</TodoItem>
+		)
+	);
+
+	return (
+		<div>
+			{todoList}
+		</div>
+	);
+}
+(...)
+```
+
+
+10.3.5 데이터 제거
+
+- 데이터 수정 기능을 구현했다면 제거하는 것은 훨씬 쉽다.
+- handleRemove 메서드를 정의해보자.
+- 이 메서드로 배열에서 id를 찾아 제거하는 로직을 작성하고, TodoList에 onRemove props로 전달하자.
+
+App.js
+```
+(...)
+
+// 선택한 id를 배열에서 제거한다.
+```
+handleRemove = (id) => {
+	const { todos } = this.state;
+	const index = todos.findIndex( todo => todo.id === id );
+
+	// slice로 전후 데이터들을 복사하고, 우리가 찾은 index는 제외시킨다.
+	this.setState({
+		todos: [
+			...todos.slice(0, index),
+			...todos.slice(index + 1, todos.length)
+		]
+	});
+}
+
+render() {
+	const { input, todos } = this.state;
+	const { handleChange, handleInsert, handleToggle, handleRemove } = this;
+	return (
+		<PageTemplate>
+			<TodoInput onChange={handleChange} onInsert={handleInsert} value={input} />
+			<TodoList todos={todos} onToggle={handleToggle} onRemove={handleRemove} />
+		</PageTemplate>
+	);
+}
+(...)
+```
+
+- App 컴포넌트를 수정한 후 데이터 수정 기능을 구현할 때 작성했던 것과 동일한 방식이다.
+- onRemove를 설정할 때 화살표 함수로 새 함수를 만드록, todo.id를 파라미터로 전달하여 실행하도록 하자.
+
+TodoList.js
+```
+(...)
+render() {
+	const { todos, onToggle, onRemove } = this.props;
+	const todoList = todos.map(
+		todo => (
+			<TodoItem
+				key={todo.id}
+				done={todo.done}
+				onToggle={() => onToggle(todo.id)}
+				onRemove={() => onRemove(todo.id)}>
+			{todo.text}
+			</TodoItem>
+		)
+	);
+}
+(...)
+```
+- 여기까지 작업하고 지우기 버튼을 누르면 데이터가 사라질 것 같지만, 실제로는 제대로 동작하지 않는다.
+- 지우기 버튼의 상위 요소에 클릭 이벤트에 onToggle이 설정되어 있기 때문에, 버튼을 누르면 onRemove -> onToggle 순으로 setState가 동시에 일어나면서 업데이트 내용을 병합하여 제대로 제거되지 않는다.
+- 자식 요소에도 onClick 이벤트가 설정되어 있고, 부모 요소에도 onClick 이벤트가 설정되어 있으면 자식 -> 부모 순으로 메서드를 실행하게 된다.
+- 이를 propagation이라 한다.
+- 이를 방지하려면 자식 요소의 onClick 처리 함수 내부에서 e.stopPropagation 함수를 호출해주어야 한다.
+
+TodoItem.js
+```
+(...)
+
+return (
+	<div className={cx('todo-item')} onClick={onToggle}>
+		<input className={cx('tick')} type="checkbox" checked={done} readOnly />
+		<div className={cx('text', {done})}>{children}</div>
+		<div className={cx('delete')} onClick={(e) => {
+			onRemove();
+			e.stopPropagation();
+			}
+		}>[지우기]</div>
+);
+(...)
+```
+
+10.4 정리
+
+- 지금까지 한 프로젝트는 소규모 프로젝트이기 때문에 컴포넌트 리렌더링 최적화 작업을 따로 하지 않아도 정상적으로 동작한다.
+- 하지만 규모가 크면 리렌더링을 할 때 조금씩 버퍼링이 발생할 수 있다.
+- 클라이언트 쪽 자원을 더욱 효율적으로 사용하려면 불필요한 업데이트를 방지해야 한다.
+- 이는 11장에서 배워보자.
